@@ -1,15 +1,42 @@
-## Put comments here that give an overall description of what your
-## functions do
+## Functions will calculate inverse of a matrix or
+## find it in cache. 
 
-## Write a short comment describing this function
+## Returns a list of functions to set and get a matrix 
+## and set and get an inverse matrix.
 
 makeCacheMatrix <- function(x = matrix()) {
-
+        imtx <- NULL
+        set <- function(y){
+                x <<- y
+                imtx <<- NULL
+        }
+        get <- function() x
+        setimtx <- function(invmatrix) imtx <<- invmatrix
+        getimtx <- function() imtx
+        list(set = set, get = get, 
+             setimtx = setimtx,
+             getimtx = getimtx)
 }
 
 
-## Write a short comment describing this function
+## If inverse already calculated, function will return
+## inverse from cache. If not, see if inverse can be 
+## calculated. If not, return message describing error.
+## Else, calculate inverse and save it to cache. 
 
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+        mtx <- x$get()
+        imtx <- x$getimtx()
+        if (!is.null(imtx)){
+                message("Getting cached data...")
+                return(imtx)
+        } else if (nrow(mtx) != ncol(mtx)){
+                message("Only square matrices have an inverse.")
+        } else if (det(mtx) == 0){
+                message("Singular matrices do not have an inverse.")
+        } else {
+                imtx <- solve(mtx, ...)
+                x$setimtx(imtx)
+                return(imtx)
+        }
 }
